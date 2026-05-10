@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+  <!-- Filled bluetooth icon that respects theme colors -->
+
+  <!-- Central vertical bar -->
+  <path d="M 9,2 L 9,18 L 11,18 L 11,2 Z" fill="none" stroke="#000000" stroke-width="0.5"/>
+
+  <!-- Upper triangle (right side) -->
+  <path d="M 10,2 L 16,7 L 10,10 Z" fill="none" stroke="#000000" stroke-width="1"/>
+
+  <!-- Lower triangle (right side) -->
+  <path d="M 10,10 L 16,13 L 10,18 Z" fill="none" stroke="#000000" stroke-width="1"/>
+
+  <!-- Left crossing lines -->
+  <path d="M 4,7 L 10,10 L 4,13 Z" fill="none" stroke="#000000" stroke-width="1"/>
+</svg>

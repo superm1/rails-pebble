@@ -1,0 +1,77 @@
+{
+  "name": "Rails for Pebble",
+  "author": "Mario Limonciello",
+  "version": "0.0.1",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {
+    "pebble-fctx": "^1.6.5",
+    "pebble-fctx-compiler": "^1.2.2"
+  },
+  "pebble": {
+    "displayName": "Rails",
+    "uuid": "b948ebf0-9be1-4477-8a10-8673878ebb82",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "emery"
+    ],
+    "watchapp": {
+      "watchface": true
+    },
+    "capabilities": [
+      "configurable"
+    ],
+    "messageKeys": [
+      "CONFIG_KEY_THEME",
+      "CONFIG_KEY_ACCENT_COLOR",
+      "CONFIG_KEY_FIELD_1",
+      "CONFIG_KEY_FIELD_2",
+      "CONFIG_KEY_FIELD_3",
+      "CONFIG_KEY_FIELD_4",
+      "CONFIG_KEY_FIELD_5",
+      "CONFIG_KEY_FIELD_6",
+      "CONFIG_KEY_TIME_FORMAT",
+      "CONFIG_KEY_TEMP_UNIT",
+      "CONFIG_KEY_DIST_UNIT",
+      "CONFIG_KEY_GAUGE_1",
+      "CONFIG_KEY_GAUGE_2",
+      "CONFIG_KEY_GAUGE_MAX_STEPS",
+      "CONFIG_KEY_GAUGE_MAX_CALORIES",
+      "CONFIG_KEY_GAUGE_MAX_DISTANCE",
+      "CONFIG_KEY_SHOW_PHONE",
+      "WeatherTemperature",
+      "WeatherCondition",
+      "RequestWeatherUpdate"
+    ],
+    "resources": {
+      "media": [
+        {"name": "LECO_FONT", "type": "raw", "file": "fonts/LECO1976-Regular.ffont"},
+        {"name": "AVENIR_REGULAR_FONT", "type": "raw", "file": "fonts/AvenirNextRegular.ffont"},
+        {"name": "AVENIR_BOLD_FONT", "type": "raw", "file": "fonts/AvenirNextDemiBold.ffont"},
+        {"name": "STEP_ICON", "type": "raw", "file": "data/HEALTH_STEPS.pdc"},
+        {"name": "HEART_ICON", "type": "raw", "file": "data/HEALTH_HEART.pdc"},
+        {"name": "BATTERY_ICON", "type": "raw", "file": "data/BATTERY_BG.pdc"},
+        {"name": "BATTERY_CHARGING_ICON", "type": "raw", "file": "data/BATTERY_CHARGE.pdc"},
+        {"name": "PHONE_DISCONNECTED_ICON", "type": "raw", "file": "data/DISCONNECTED.pdc"},
+        {"name": "DATE_BG_ICON", "type": "raw", "file": "data/DATE_BG.pdc"},
+        {"name": "DATE_BG_LG_ICON", "type": "raw", "file": "data/DATE_BG_LG.pdc"},
+        {"name": "WEATHER_CLEAR_DAY", "type": "raw", "file": "data/CLEAR_DAY.pdc"},
+        {"name": "WEATHER_CLEAR_NIGHT", "type": "raw", "file": "data/CLEAR_NIGHT.pdc"},
+        {"name": "WEATHER_CLOUDY", "type": "raw", "file": "data/CLOUDY_DAY.pdc"},
+        {"name": "WEATHER_PARTLY_CLOUDY", "type": "raw", "file": "data/PARTLY_CLOUDY.pdc"},
+        {"name": "WEATHER_PARTLY_CLOUDY_NIGHT", "type": "raw", "file": "data/PARTLY_CLOUDY_NIGHT.pdc"},
+        {"name": "WEATHER_RAIN_LIGHT", "type": "raw", "file": "data/LIGHT_RAIN.pdc"},
+        {"name": "WEATHER_RAIN_HEAVY", "type": "raw", "file": "data/HEAVY_RAIN.pdc"},
+        {"name": "WEATHER_SNOW_LIGHT", "type": "raw", "file": "data/LIGHT_SNOW.pdc"},
+        {"name": "WEATHER_SNOW_HEAVY", "type": "raw", "file": "data/HEAVY_SNOW.pdc"},
+        {"name": "WEATHER_THUNDERSTORM", "type": "raw", "file": "data/THUNDERSTORM.pdc"},
+        {"name": "WEATHER_RAIN_AND_SNOW", "type": "raw", "file": "data/RAINING_AND_SNOWING.pdc"},
+        {"name": "WEATHER_GENERIC", "type": "raw", "file": "data/WEATHER_GENERIC.pdc"},
+        {"name": "CALORIE_ICON", "type": "raw", "file": "data/CALORIE_ICON.pdc"},
+        {"name": "DISTANCE_ICON", "type": "raw", "file": "data/DISTANCE_ICON.pdc"},
+        {"name": "BLUETOOTH_ICON", "type": "raw", "file": "data/BLUETOOTH_ICON.pdc"}
+      ]
+    }
+  }
+}
