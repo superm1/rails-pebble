@@ -123,9 +123,8 @@ Icons are SVG files converted to PDC format:
 
 ```bash
 # Convert SVG to PDC (requires pebble SDK tools)
-cd /tmp
 PYTHONPATH=~/.pebble-sdk/SDKs/4.9.169/sdk-core/pebble/common/tools:$PYTHONPATH \
-  python3 svg2pdc.py input.svg -o output.pdc
+  python3 tools/svg2pdc.py input.svg -o output.pdc
 ```
 
 SVG files are located in `resources/data/` and converted PDC files go to the same directory.
