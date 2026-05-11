@@ -2,6 +2,10 @@
 
 A feature-rich, configurable digital watchface for the Pebble ecosystem, inspired by the Garmin "Rails" watchface. Designed specifically for the **Pebble Time 2** (Emery)'s large 200×228 color display.
 
+## Installing
+
+See the [Pebble app store](https://apps.repebble.com/rails_9866ad086aed4791ae4a5cf4) for installation.
+
 ## Features
 
 ### ⏰ Time Display
