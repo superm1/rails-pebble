@@ -74,8 +74,13 @@ void fields_update_health(RailsState *state) {
                 break;
             }
             case FIELD_BATTERY:
-                snprintf(state->field_buffers[i], sizeof(state->field_buffers[i]),
-                         "%d%%", state->battery.charge_percent);
+                if (state->battery.charge_percent >= 100) {
+                    snprintf(state->field_buffers[i], sizeof(state->field_buffers[i]),
+                             "%d", state->battery.charge_percent);
+                } else {
+                    snprintf(state->field_buffers[i], sizeof(state->field_buffers[i]),
+                             "%d%%", state->battery.charge_percent);
+                }
                 text_layer_set_text(state->field_layers[i], state->field_buffers[i]);
                 break;
             case FIELD_WEATHER: {
