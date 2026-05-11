@@ -217,12 +217,6 @@ The Pebble Time 2 lacks some sensors present on Garmin watches:
 | Stress score | ✅ | ❌ Proprietary |
 | Training effect | ✅ | ❌ Proprietary |
 
-## Known Issues
-
-- Floors climbed field is not available in Pebble SDK 4
-- Weather requires phone app integration (not yet implemented)
-- Some npm package vulnerabilities (inherited from dependencies)
-
 ## License
 
 MIT License - feel free to use, modify, and distribute.
