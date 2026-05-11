@@ -137,10 +137,8 @@ SVG files are located in `resources/data/` and converted PDC files go to the sam
 
 ```
 rails-pebble/
-├── package.json              # Project manifest & resource definitions
-├── appinfo.json              # Legacy Pebble app metadata
-├── README.md                 # This file
-├── generate_icons.py         # Python script to generate raster icons
+├── package.json             # Project manifest & resource definitions
+├── README.md                # This file
 ├── src/
 │   └── c/
 │       ├── rails.c          # Main watchface logic & layout
@@ -160,10 +158,9 @@ rails-pebble/
 │       └── storage.c        # Persistent storage
 └── resources/
     ├── data/                # PDC vector icons & SVG sources
-    │   ├── *.pdc           # PDC vector icons
-    │   └── *.svg           # SVG source files
-    ├── fonts/              # Vector fonts (from dependencies)
-    └── images/             # Raster images (generated)
+    │   ├── *.pdc            # PDC vector icons
+    │   └── *.svg            # SVG source files
+    └── fonts/               # Vector fonts (from dependencies)
 ```
 
 ## Dependencies
