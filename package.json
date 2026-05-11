@@ -1,7 +1,7 @@
 {
   "name": "Rails for Pebble",
   "author": "Mario Limonciello",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "keywords": ["pebble-app"],
   "private": true,
   "dependencies": {
