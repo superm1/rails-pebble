@@ -79,7 +79,6 @@ void fields_update_health(RailsState *state) {
                 text_layer_set_text(state->field_layers[i], state->field_buffers[i]);
                 break;
             case FIELD_WEATHER: {
-                // Show temperature text (icon is shown separately via field icon layer)
                 int temp = state->weather.temp_celsius;
                 if (state->config.temp_unit == TEMP_FAHRENHEIT) {
                     temp = (temp * 9 / 5) + 32;
@@ -89,6 +88,11 @@ void fields_update_health(RailsState *state) {
                 text_layer_set_text(state->field_layers[i], state->field_buffers[i]);
                 break;
             }
+            case FIELD_HEART_RATE:
+                break;
+            case FIELD_NONE:
+                text_layer_set_text(state->field_layers[i], "");
+                break;
             default:
                 break;
         }
