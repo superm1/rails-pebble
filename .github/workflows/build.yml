@@ -1,4 +1,4 @@
-name: Build Pebble App
+name: CI
 
 on:
   push:
@@ -8,41 +8,4 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-
-    - name: Install ARM toolchain
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y gcc-arm-none-eabi
-
-    - name: Install Pebble SDK
-      run: |
-        pip3 install pebble-tool
-        pebble sdk install latest
-
-    - name: Install npm dependencies
-      run: npm install
-
-    - name: Build Pebble app
-      run: pebble build
-
-    - name: Upload .pbw artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: pebble-app
-        path: build/*.pbw
-        if-no-files-found: error
+    uses: ./.github/workflows/build-app.yml
