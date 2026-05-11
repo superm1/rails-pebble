@@ -81,8 +81,6 @@ static void date_layer_draw(Layer *layer, GContext *ctx) {
     RailsState *state = g_rails_state;
     if (!state) return;
 
-    GRect bounds = layer_get_bounds(layer);
-
     time_t temp = time(NULL);
     struct tm *tick_time = localtime(&temp);
 
@@ -472,21 +470,22 @@ static void rails_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
         // Battery icon removed - battery is now only a field
     }
 
-    // Only mark specific layers dirty instead of full redraw to avoid performance issues
-    layer_mark_dirty(state->time_layer);
-    layer_mark_dirty(state->date_layer);
+    // Time and date layers are now marked dirty inside display_update_time/date
+    // only when values actually change
 
-    // Mark gauge layers dirty for updates
-    for (int i = 0; i < 2; i++) {
-        if (state->gauge_layers[i]) {
-            layer_mark_dirty(state->gauge_layers[i]);
+    // Only mark gauge layers dirty when health data might have changed
+    if (units_changed & (MINUTE_UNIT | HOUR_UNIT | DAY_UNIT)) {
+        for (int i = 0; i < 2; i++) {
+            if (state->gauge_layers[i]) {
+                layer_mark_dirty(state->gauge_layers[i]);
+            }
         }
-    }
 
-    // Mark field layers dirty
-    for (int i = 0; i < NUM_FIELDS; i++) {
-        if (state->field_layers[i]) {
-            text_layer_set_text(state->field_layers[i], state->field_buffers[i]);
+        // Mark field layers dirty only when data might have changed
+        for (int i = 0; i < NUM_FIELDS; i++) {
+            if (state->field_layers[i]) {
+                text_layer_set_text(state->field_layers[i], state->field_buffers[i]);
+            }
         }
     }
 }
@@ -617,9 +616,12 @@ static void rails_connection_handler(bool connected) {
     if (window) {
         RailsState *state = (RailsState *)window_get_user_data(window);
         if (state) {
-            state->phone_connected = connected;
-            icons_update_phone(state, connected);
-            rails_redraw(state);
+            // Only update if connection state actually changed
+            if (state->phone_connected != connected) {
+                state->phone_connected = connected;
+                icons_update_phone(state, connected);
+                rails_redraw(state);
+            }
         }
     }
 }
@@ -633,13 +635,17 @@ static void rails_battery_handler(BatteryChargeState bat) {
     if (window) {
         RailsState *state = (RailsState *)window_get_user_data(window);
         if (state) {
-            state->battery = bat;
-            // Battery icon removed - battery is now only a field
+            // Only update if battery percentage actually changed
+            if (state->battery.charge_percent != bat.charge_percent ||
+                state->battery.is_charging != bat.is_charging ||
+                state->battery.is_plugged != bat.is_plugged) {
+                state->battery = bat;
 
-            // Update battery field if it's configured
-            fields_update_health(state);
+                // Update battery field if it's configured
+                fields_update_health(state);
 
-            rails_redraw(state);
+                rails_redraw(state);
+            }
         }
     }
 }
@@ -654,16 +660,19 @@ static void rails_health_event_handler(HealthEventType event, void *context) {
     if (event == HealthEventHeartRateUpdate) {
         HealthValue hr = health_service_peek_current_value(HealthMetricHeartRateBPM);
         if (hr != 0) {
-            state->health.heart_rate = (uint16_t)hr;
-            state->health.hr_available = true;
-            for (int i = 0; i < NUM_FIELDS; i++) {
-                if (state->config.fields[i] == FIELD_HEART_RATE) {
-                    snprintf(state->field_buffers[i], sizeof(state->field_buffers[i]),
-                             "%hu", (unsigned short)hr);
-                    text_layer_set_text(state->field_layers[i], state->field_buffers[i]);
+            // Only update if heart rate actually changed
+            if (state->health.heart_rate != (uint16_t)hr) {
+                state->health.heart_rate = (uint16_t)hr;
+                state->health.hr_available = true;
+                for (int i = 0; i < NUM_FIELDS; i++) {
+                    if (state->config.fields[i] == FIELD_HEART_RATE) {
+                        snprintf(state->field_buffers[i], sizeof(state->field_buffers[i]),
+                                 "%hu", (unsigned short)hr);
+                        text_layer_set_text(state->field_layers[i], state->field_buffers[i]);
+                    }
                 }
+                rails_redraw(state);
             }
-            rails_redraw(state);
         }
     }
 }
