@@ -455,9 +455,7 @@ static void rails_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
         }
     }
 
-    if (units_changed & SECOND_UNIT) {
-        fields_update_heart_rate(state);
-    }
+    // Heart rate updates are handled by the health event handler, not tick timer
 
     if (units_changed & MINUTE_UNIT) {
         if (tick_time->tm_min % 30 == 0) {
@@ -699,7 +697,9 @@ void rails_init(RailsState *state) {
     state->phone_connected = connection_service_peek_pebble_app_connection();
 
     // Subscribe to tick timer - SDK 4: no context param
-    tick_timer_service_subscribe(SECOND_UNIT | MINUTE_UNIT | HOUR_UNIT | DAY_UNIT,
+    // Only subscribe to MINUTE_UNIT and above to reduce battery consumption
+    // Heart rate updates are handled by the health event handler
+    tick_timer_service_subscribe(MINUTE_UNIT | HOUR_UNIT | DAY_UNIT,
                                   rails_tick_handler);
 
     // Click config with context

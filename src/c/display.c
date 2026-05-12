@@ -37,7 +37,7 @@ void display_set_theme(RailsState *state, ThemeId theme) {
 }
 
 void display_update_time(RailsState *state, struct tm *tick_time, TimeUnits units_changed) {
-    if (!(units_changed & (HOUR_UNIT | MINUTE_UNIT | SECOND_UNIT))) return;
+    if (!(units_changed & (HOUR_UNIT | MINUTE_UNIT))) return;
 
     char new_time_buffer[8];
     if (state->config.time_format == TIME_12H || !clock_is_24h_style()) {
