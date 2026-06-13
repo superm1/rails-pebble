@@ -492,6 +492,8 @@ static void rails_tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 // App message handlers - SDK 4: uses tuple->value->int32, AppMessageResult
 // ========================
 
+static void rails_heart_rate_subscription_update(RailsState *state);
+
 static void rails_inbox_received_callback(DictionaryIterator *iter, void *context) {
     RailsState *state = (RailsState *)context;
     if (!state) return;
@@ -519,23 +521,46 @@ static void rails_inbox_received_callback(DictionaryIterator *iter, void *contex
         display_set_theme(state, state->config.theme);
     }
 
+    bool fields_changed = false;
     tuple = dict_find(iter, MESSAGE_KEY_CONFIG_KEY_FIELD_1);
-    if (tuple) state->config.fields[0] = (FieldTypeId)tuple->value->int32;
+    if (tuple) {
+        state->config.fields[0] = (FieldTypeId)tuple->value->int32;
+        fields_changed = true;
+    }
 
     tuple = dict_find(iter, MESSAGE_KEY_CONFIG_KEY_FIELD_2);
-    if (tuple) state->config.fields[1] = (FieldTypeId)tuple->value->int32;
+    if (tuple) {
+        state->config.fields[1] = (FieldTypeId)tuple->value->int32;
+        fields_changed = true;
+    }
 
     tuple = dict_find(iter, MESSAGE_KEY_CONFIG_KEY_FIELD_3);
-    if (tuple) state->config.fields[2] = (FieldTypeId)tuple->value->int32;
+    if (tuple) {
+        state->config.fields[2] = (FieldTypeId)tuple->value->int32;
+        fields_changed = true;
+    }
 
     tuple = dict_find(iter, MESSAGE_KEY_CONFIG_KEY_FIELD_4);
-    if (tuple) state->config.fields[3] = (FieldTypeId)tuple->value->int32;
+    if (tuple) {
+        state->config.fields[3] = (FieldTypeId)tuple->value->int32;
+        fields_changed = true;
+    }
 
     tuple = dict_find(iter, MESSAGE_KEY_CONFIG_KEY_FIELD_5);
-    if (tuple) state->config.fields[4] = (FieldTypeId)tuple->value->int32;
+    if (tuple) {
+        state->config.fields[4] = (FieldTypeId)tuple->value->int32;
+        fields_changed = true;
+    }
 
     tuple = dict_find(iter, MESSAGE_KEY_CONFIG_KEY_FIELD_6);
-    if (tuple) state->config.fields[5] = (FieldTypeId)tuple->value->int32;
+    if (tuple) {
+        state->config.fields[5] = (FieldTypeId)tuple->value->int32;
+        fields_changed = true;
+    }
+
+    if (fields_changed) {
+        rails_heart_rate_subscription_update(state);
+    }
 
     tuple = dict_find(iter, MESSAGE_KEY_CONFIG_KEY_TIME_FORMAT);
     if (tuple) {
@@ -649,7 +674,7 @@ static void rails_battery_handler(BatteryChargeState bat) {
 }
 
 // ========================
-// Health event handler - SDK 4: HealthEventType enum
+// Health event handler
 // ========================
 
 static void rails_health_event_handler(HealthEventType event, void *context) {
@@ -658,7 +683,6 @@ static void rails_health_event_handler(HealthEventType event, void *context) {
     if (event == HealthEventHeartRateUpdate) {
         HealthValue hr = health_service_peek_current_value(HealthMetricHeartRateBPM);
         if (hr != 0) {
-            // Only update if heart rate actually changed
             if (state->health.heart_rate != (uint16_t)hr) {
                 state->health.heart_rate = (uint16_t)hr;
                 state->health.hr_available = true;
@@ -672,6 +696,31 @@ static void rails_health_event_handler(HealthEventType event, void *context) {
                 rails_redraw(state);
             }
         }
+    }
+}
+
+static bool rails_is_heart_rate_field_active(RailsState *state) {
+    for (int i = 0; i < NUM_FIELDS; i++) {
+        if (state->config.fields[i] == FIELD_HEART_RATE) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static void rails_heart_rate_subscription_update(RailsState *state) {
+    static bool hrm_subscribed = false;
+    bool should_subscribe = rails_is_heart_rate_field_active(state);
+
+    if (should_subscribe && !hrm_subscribed) {
+        health_service_set_heart_rate_sample_period(60);
+        health_service_events_subscribe(rails_health_event_handler, state);
+        hrm_subscribed = true;
+        APP_LOG(APP_LOG_LEVEL_INFO, "HRM subscribed (60s interval)");
+    } else if (!should_subscribe && hrm_subscribed) {
+        health_service_events_unsubscribe();
+        hrm_subscribed = false;
+        APP_LOG(APP_LOG_LEVEL_INFO, "HRM unsubscribed");
     }
 }
 
@@ -724,9 +773,7 @@ void rails_init(RailsState *state) {
     // Battery service - SDK 4: no context param
     battery_state_service_subscribe(rails_battery_handler);
 
-    // Health service - SDK 4: uses HealthEventType enum
-    health_service_set_heart_rate_sample_period(15);
-    health_service_events_subscribe(rails_health_event_handler, state);
+    rails_heart_rate_subscription_update(state);
 
     window_stack_push(state->window, true);
     APP_LOG(APP_LOG_LEVEL_INFO, "Rails for Pebble initialized");
